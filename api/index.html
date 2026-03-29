@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>יומן תזונה</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f4ef;
+  --surface: #ffffff;
+  --card: #fdfcfa;
+  --border: #e8e2d9;
+  --border2: #d4ccbf;
+  --text: #1a1714;
+  --muted: #9a9188;
+  --muted2: #c4bdb4;
+  --accent: #2d5a27;
+  --accent-light: #e8f5e3;
+  --breakfast: #f59e0b;
+  --lunch: #10b981;
+  --dinner: #6366f1;
+  --extra: #f43f5e;
+  --cal-color: #dc2626;
+  --prot-color: #2563eb;
+  --carb-color: #d97706;
+  --fat-color: #7c3aed;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 100px;
+}
+
+/* NAV */
+.top-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+
+.nav-logo {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-logo span { font-size: 24px; }
+
+.nav-date-display {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  text-align: center;
+}
+
+.nav-journal-btn {
+  background: var(--accent-light);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Heebo', sans-serif;
+  transition: all 0.2s;
+}
+.nav-journal-btn:hover { background: var(--accent); color: white; }
+
+/* MAIN */
+.main { max-width: 540px; margin: 0 auto; padding: 20px 16px; }
+
+/* DATE NAV */
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.date-arrow {
+  background: none;
+  border: 1.5px solid var(--border2);
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.date-arrow:hover { border-color: var(--accent); color: var(--accent); }
+
+.date-center { text-align: center; }
+.date-label { font-size: 17px; font-weight: 700; }
+.date-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+/* DAILY SUMMARY BAR */
+.daily-summary {
+  background: var(--accent);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.summary-item { text-align: center; flex: 1; }
+.summary-val {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  line-height: 1;
+}
+.summary-label { font-size: 10px; color: rgba(255,255,255,0.65); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.summary-divider { width: 1px; height: 36px; background: rgba(255,255,255,0.2); }
+
+/* MEAL SECTIONS */
+.meal-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.meal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+}
+
+.meal-title-group { display: flex; align-items: center; gap: 10px; }
+
+.meal-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.meal-dot.breakfast { background: var(--breakfast); }
+.meal-dot.lunch     { background: var(--lunch); }
+.meal-dot.dinner    { background: var(--dinner); }
+.meal-dot.extra     { background: var(--extra); }
+
+.meal-name { font-size: 15px; font-weight: 700; }
+.meal-cal-sum { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+.meal-add-btn {
+  background: none;
+  border: 1.5px solid var(--border2);
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: 'Heebo', sans-serif;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 5px;
+  white-space: nowrap;
+}
+.meal-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* MEAL ITEMS */
+.meal-items { padding: 0; }
+
+.meal-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  animation: slideIn 0.25s ease;
+}
+.meal-item:last-child { border-bottom: none; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.item-thumb {
+  width: 46px; height: 46px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.item-thumb-placeholder {
+  width: 46px; height: 46px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.item-info { flex: 1; min-width: 0; }
+.item-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-macros { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: 'Space Mono', monospace; }
+
+.item-cal {
+  font-size: 15px; font-weight: 900;
+  color: var(--cal-color);
+  font-family: 'Space Mono', monospace;
+  white-space: nowrap;
+}
+
+.item-del {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted2); font-size: 16px;
+  padding: 4px 6px; border-radius: 6px;
+  transition: all 0.15s;
+}
+.item-del:hover { color: var(--extra); background: #fff0f3; }
+
+.meal-empty {
+  padding: 18px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* MODAL OVERLAY */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.overlay.active { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 540px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 0 0 40px;
+  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.modal-handle {
+  width: 36px; height: 4px;
+  background: var(--border2);
+  border-radius: 2px;
+  margin: 12px auto 0;
+}
+
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-title { font-size: 17px; font-weight: 800; }
+.modal-close {
+  background: var(--bg); border: none;
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 16px; cursor: pointer; color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.modal-body { padding: 20px; }
+
+/* Upload area in modal */
+.modal-upload-zone {
+  border: 2px dashed var(--border2);
+  border-radius: 16px;
+  padding: 28px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.modal-upload-zone input {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.modal-upload-zone:hover { border-color: var(--accent); background: var(--accent-light); }
+.modal-upload-zone .upload-icon { font-size: 36px; display: block; margin-bottom: 8px; }
+.modal-upload-zone p { font-size: 14px; color: var(--muted); }
+.modal-upload-zone b { color: var(--accent); }
+
+.modal-cam-btn {
+  width: 100%; padding: 12px;
+  border: 1.5px solid var(--border2);
+  border-radius: 12px;
+  background: var(--surface);
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--text); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+  position: relative;
+}
+.modal-cam-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.modal-cam-btn:hover { border-color: var(--breakfast); color: var(--breakfast); }
+
+/* Preview in modal */
+.modal-preview { display: none; margin-bottom: 14px; position: relative; }
+.modal-preview img {
+  width: 100%; max-height: 200px; object-fit: cover;
+  border-radius: 14px; border: 1px solid var(--border);
+  display: block;
+}
+.modal-preview-del {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(0,0,0,0.6); color: white;
+  border: none; border-radius: 20px; padding: 4px 10px;
+  font-size: 12px; cursor: pointer; font-family: 'Heebo', sans-serif;
+}
+
+/* Analyze btn in modal */
+.modal-analyze-btn {
+  width: 100%; padding: 15px;
+  background: var(--accent);
+  border: none; border-radius: 14px;
+  color: white; font-family: 'Heebo', sans-serif;
+  font-size: 16px; font-weight: 900;
+  cursor: pointer; display: none;
+  align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+  margin-bottom: 14px;
+}
+.modal-analyze-btn:hover { background: #1e4019; transform: translateY(-1px); }
+.modal-analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Loader in modal */
+.modal-loader {
+  display: none; flex-direction: column;
+  align-items: center; gap: 12px;
+  padding: 24px;
+}
+.spinner { width: 38px; height: 38px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.modal-loader p { font-size: 13px; color: var(--muted); text-align: center; }
+
+/* Result preview in modal */
+.modal-result-preview {
+  display: none;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-result-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.modal-result-emoji { font-size: 28px; }
+.modal-result-name { font-size: 15px; font-weight: 700; }
+.modal-result-portion { font-size: 12px; color: var(--muted); }
+
+.mini-macros {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.mini-macro {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 8px 6px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.mini-macro-val { font-size: 16px; font-weight: 900; font-family: 'Space Mono', monospace; }
+.mini-macro-lbl { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.mini-macro.cal .mini-macro-val { color: var(--cal-color); }
+.mini-macro.prot .mini-macro-val { color: var(--prot-color); }
+.mini-macro.carb .mini-macro-val { color: var(--carb-color); }
+.mini-macro.fat .mini-macro-val { color: var(--fat-color); }
+
+.modal-add-confirm {
+  width: 100%; padding: 14px;
+  background: var(--accent);
+  border: none; border-radius: 14px;
+  color: white; font-family: 'Heebo', sans-serif;
+  font-size: 15px; font-weight: 800;
+  cursor: pointer; display: none;
+  align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+}
+.modal-add-confirm.visible { display: flex; }
+.modal-add-confirm:hover { background: #1e4019; }
+
+/* Error */
+.modal-error {
+  display: none;
+  background: #fff0f3; border: 1px solid #fecdd3;
+  border-radius: 12px; padding: 12px 14px;
+  color: var(--extra); font-size: 13px; margin-bottom: 12px;
+}
+
+/* JOURNAL MODAL */
+.journal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  z-index: 300;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.journal-overlay.active { display: flex; }
+
+.journal-modal {
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 540px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding-bottom: 40px;
+  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.journal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--surface); z-index: 1;
+}
+.journal-title { font-size: 18px; font-weight: 900; }
+.journal-close {
+  background: var(--bg); border: none;
+  width: 34px; height: 34px; border-radius: 50%;
+  font-size: 18px; cursor: pointer; color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.journal-list { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+
+.journal-day-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.journal-day-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(45,90,39,0.1); }
+
+.journal-day-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+}
+.journal-day-date { font-size: 14px; font-weight: 700; }
+.journal-day-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.journal-day-cal {
+  font-size: 18px; font-weight: 900;
+  color: var(--cal-color); font-family: 'Space Mono', monospace;
+}
+.journal-day-cal span { font-size: 11px; color: var(--muted); font-family: 'Heebo'; font-weight: 400; }
+
+.journal-day-meals {
+  padding: 0 16px 14px;
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.journal-meal-chip {
+  font-size: 11px; padding: 4px 10px; border-radius: 20px;
+  font-weight: 600;
+  display: flex; align-items: center; gap: 4px;
+}
+.journal-meal-chip.breakfast { background: #fef3c7; color: #92400e; }
+.journal-meal-chip.lunch     { background: #d1fae5; color: #065f46; }
+.journal-meal-chip.dinner    { background: #ede9fe; color: #4c1d95; }
+.journal-meal-chip.extra     { background: #ffe4e6; color: #9f1239; }
+
+.journal-empty {
+  text-align: center; padding: 48px 24px;
+  color: var(--muted); font-size: 14px;
+}
+.journal-empty .big-emoji { font-size: 48px; margin-bottom: 12px; }
+
+/* Bottom disclaimer */
+.disclaimer {
+  text-align: center; font-size: 11px; color: var(--muted2);
+  margin-top: 32px; padding: 0 16px; line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="nav-logo"><span>🥗</span> יומן תזונה</div>
+  <div class="nav-date-display" id="navDateDisplay">—</div>
+  <button class="nav-journal-btn" onclick="openJournal()">📖 היסטוריה</button>
+</nav>
+
+<div class="main">
+
+  <!-- DATE NAV -->
+  <div class="date-nav">
+    <button class="date-arrow" onclick="changeDate(-1)">→</button>
+    <div class="date-center">
+      <div class="date-label" id="dateLabel">—</div>
+      <div class="date-sub" id="dateSub">—</div>
+    </div>
+    <button class="date-arrow" onclick="changeDate(1)">←</button>
+  </div>
+
+  <!-- DAILY SUMMARY -->
+  <div class="daily-summary">
+    <div class="summary-item">
+      <div class="summary-val" id="sumCal">0</div>
+      <div class="summary-label">קלוריות</div>
+    </div>
+    <div class="summary-divider"></div>
+    <div class="summary-item">
+      <div class="summary-val" id="sumProt">0</div>
+      <div class="summary-label">חלבון g</div>
+    </div>
+    <div class="summary-divider"></div>
+    <div class="summary-item">
+      <div class="summary-val" id="sumCarb">0</div>
+      <div class="summary-label">פחמימות g</div>
+    </div>
+    <div class="summary-divider"></div>
+    <div class="summary-item">
+      <div class="summary-val" id="sumFat">0</div>
+      <div class="summary-label">שומן g</div>
+    </div>
+  </div>
+
+  <!-- MEAL SECTIONS -->
+  <div class="meal-section" id="section-breakfast">
+    <div class="meal-header">
+      <div class="meal-title-group">
+        <div class="meal-dot breakfast"></div>
+        <div>
+          <div class="meal-name">🌅 ארוחת בוקר</div>
+          <div class="meal-cal-sum" id="cal-breakfast">0 kcal</div>
+        </div>
+      </div>
+      <button class="meal-add-btn" onclick="openAddModal('breakfast')">+ הוסף</button>
+    </div>
+    <div class="meal-items" id="items-breakfast">
+      <div class="meal-empty" id="empty-breakfast">לא נוסף עדיין ☀️</div>
+    </div>
+  </div>
+
+  <div class="meal-section" id="section-lunch">
+    <div class="meal-header">
+      <div class="meal-title-group">
+        <div class="meal-dot lunch"></div>
+        <div>
+          <div class="meal-name">🌿 ארוחת צהריים</div>
+          <div class="meal-cal-sum" id="cal-lunch">0 kcal</div>
+        </div>
+      </div>
+      <button class="meal-add-btn" onclick="openAddModal('lunch')">+ הוסף</button>
+    </div>
+    <div class="meal-items" id="items-lunch">
+      <div class="meal-empty" id="empty-lunch">לא נוסף עדיין 🌿</div>
+    </div>
+  </div>
+
+  <div class="meal-section" id="section-dinner">
+    <div class="meal-header">
+      <div class="meal-title-group">
+        <div class="meal-dot dinner"></div>
+        <div>
+          <div class="meal-name">🌙 ארוחת ערב</div>
+          <div class="meal-cal-sum" id="cal-dinner">0 kcal</div>
+        </div>
+      </div>
+      <button class="meal-add-btn" onclick="openAddModal('dinner')">+ הוסף</button>
+    </div>
+    <div class="meal-items" id="items-dinner">
+      <div class="meal-empty" id="empty-dinner">לא נוסף עדיין 🌙</div>
+    </div>
+  </div>
+
+  <div class="meal-section" id="section-extra">
+    <div class="meal-header">
+      <div class="meal-title-group">
+        <div class="meal-dot extra"></div>
+        <div>
+          <div class="meal-name">🍪 תוספות &amp; נשנושים</div>
+          <div class="meal-cal-sum" id="cal-extra">0 kcal</div>
+        </div>
+      </div>
+      <button class="meal-add-btn" onclick="openAddModal('extra')">+ הוסף</button>
+    </div>
+    <div class="meal-items" id="items-extra">
+      <div class="meal-empty" id="empty-extra">לא נוסף עדיין 🍪</div>
+    </div>
+  </div>
+
+  <p class="disclaimer">⚠️ הערכים הם הערכה בלבד ואינם מחליפים ייעוץ תזונתי מקצועי.</p>
+</div>
+
+<!-- ADD FOOD MODAL -->
+<div class="overlay" id="addOverlay" onclick="closeAddModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">הוסף ארוחה</div>
+      <button class="modal-close" onclick="closeAddModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-upload-zone" id="modalUploadZone">
+        <input type="file" accept="image/*" id="modalFileInput" onchange="handleModalFile(this.files[0])">
+        <span class="upload-icon">📷</span>
+        <p>גרור תמונה או <b>לחץ לבחור</b></p>
+      </div>
+
+      <button class="modal-cam-btn" id="modalCamBtn">
+        <input type="file" accept="image/*" capture="environment" id="modalCamInput" onchange="handleModalFile(this.files[0])">
+        📸 צלם עם המצלמה
+      </button>
+
+      <div class="modal-preview" id="modalPreview">
+        <img id="modalPreviewImg" src="" alt="">
+        <button class="modal-preview-del" onclick="clearModalImage()">✕ הסר</button>
+      </div>
+
+      <div class="modal-error" id="modalError"></div>
+
+      <button class="modal-analyze-btn" id="modalAnalyzeBtn" onclick="analyzeModalImage()">
+        🔍 נתח את האוכל
+      </button>
+
+      <div class="modal-loader" id="modalLoader">
+        <div class="spinner"></div>
+        <p>מנתח עם AI...<br>מזהה רכיבים תזונתיים</p>
+      </div>
+
+      <div class="modal-result-preview" id="modalResultPreview">
+        <div class="modal-result-header">
+          <div class="modal-result-emoji" id="modalResEmoji">🍽️</div>
+          <div>
+            <div class="modal-result-name" id="modalResName">—</div>
+            <div class="modal-result-portion" id="modalResPortion">—</div>
+          </div>
+        </div>
+        <div class="mini-macros">
+          <div class="mini-macro cal">
+            <div class="mini-macro-val" id="modalResCal">—</div>
+            <div class="mini-macro-lbl">קלוריות</div>
+          </div>
+          <div class="mini-macro prot">
+            <div class="mini-macro-val" id="modalResProt">—</div>
+            <div class="mini-macro-lbl">חלבון g</div>
+          </div>
+          <div class="mini-macro carb">
+            <div class="mini-macro-val" id="modalResCarb">—</div>
+            <div class="mini-macro-lbl">פחמימות g</div>
+          </div>
+          <div class="mini-macro fat">
+            <div class="mini-macro-val" id="modalResFat">—</div>
+            <div class="mini-macro-lbl">שומן g</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="modal-add-confirm" id="modalAddConfirm" onclick="confirmAddItem()">
+        ✓ הוסף ליומן
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- JOURNAL MODAL -->
+<div class="journal-overlay" id="journalOverlay" onclick="closeJournalModal(event)">
+  <div class="journal-modal">
+    <div class="modal-handle"></div>
+    <div class="journal-header">
+      <div class="journal-title">📖 היסטוריית יומן</div>
+      <button class="journal-close" onclick="closeJournal()">✕</button>
+    </div>
+    <div class="journal-list" id="journalList"></div>
+  </div>
+</div>
+
+<script>
+// ====== STATE ======
+let currentDate = getTodayStr();
+let diary = loadDiary();
+let currentMealType = null;
+let pendingItem = null;
+let currentImageBase64 = null;
+let currentImageMimeType = 'image/jpeg';
+
+function saveApiKey(val) {
+  localStorage.setItem('anthropic_api_key', val.trim());
+  document.getElementById('apiKeyStatus').textContent = val.trim().startsWith('sk-ant-') ? '✅' : '❓';
+}
+
+function loadApiKey() {
+  const k = localStorage.getItem('anthropic_api_key') || '';
+  const inp = document.getElementById('apiKeyInput');
+  if (inp) { inp.value = k; document.getElementById('apiKeyStatus').textContent = k.startsWith('sk-ant-') ? '✅' : '❓'; }
+  return k;
+}
+
+// ====== DATE UTILS ======
+function getTodayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function dateStrToDisplay(str) {
+  const d = new Date(str + 'T12:00:00');
+  const today = getTodayStr();
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const dayName = days[d.getDay()];
+  const formatted = d.toLocaleDateString('he-IL', { day: 'numeric', month: 'long' });
+  if (str === today) return { label: 'היום', sub: formatted + ' · ' + dayName };
+  if (str === yesterday) return { label: 'אתמול', sub: formatted + ' · ' + dayName };
+  return { label: formatted, sub: 'יום ' + dayName };
+}
+
+function addDays(str, n) {
+  const d = new Date(str + 'T12:00:00');
+  d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+}
+
+// ====== STORAGE ======
+function loadDiary() {
+  try { return JSON.parse(localStorage.getItem('nutrition_diary') || '{}'); } catch { return {}; }
+}
+function saveDiary() {
+  localStorage.setItem('nutrition_diary', JSON.stringify(diary));
+}
+
+function getDayData(dateStr) {
+  if (!diary[dateStr]) diary[dateStr] = { breakfast: [], lunch: [], dinner: [], extra: [] };
+  return diary[dateStr];
+}
+
+// ====== RENDER ======
+const mealTypes = ['breakfast','lunch','dinner','extra'];
+const mealColors = { breakfast: '#f59e0b', lunch: '#10b981', dinner: '#6366f1', extra: '#f43f5e' };
+
+function renderAll() {
+  const d = dateStrToDisplay(currentDate);
+  document.getElementById('dateLabel').textContent = d.label;
+  document.getElementById('dateSub').textContent   = d.sub;
+  document.getElementById('navDateDisplay').textContent = d.label;
+
+  const day = getDayData(currentDate);
+  let totalCal = 0, totalProt = 0, totalCarb = 0, totalFat = 0;
+
+  mealTypes.forEach(type => {
+    const items = day[type] || [];
+    const container = document.getElementById('items-' + type);
+    const empty     = document.getElementById('empty-' + type);
+    const calSum    = document.getElementById('cal-' + type);
+
+    let mealCal = 0;
+    items.forEach(i => mealCal += (i.calories || 0));
+    calSum.textContent = mealCal + ' kcal';
+
+    totalCal  += items.reduce((s,i) => s + (i.calories||0), 0);
+    totalProt += items.reduce((s,i) => s + (i.protein||0), 0);
+    totalCarb += items.reduce((s,i) => s + (i.carbs||0), 0);
+    totalFat  += items.reduce((s,i) => s + (i.fat||0), 0);
+
+    // Clear old items (keep empty msg)
+    Array.from(container.children).forEach(c => {
+      if (!c.id?.startsWith('empty')) c.remove();
+    });
+
+    if (items.length === 0) {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      items.forEach((item, idx) => {
+        const el = document.createElement('div');
+        el.className = 'meal-item';
+        el.innerHTML = `
+          ${item.thumbnail
+            ? `<img class="item-thumb" src="${item.thumbnail}" alt="">`
+            : `<div class="item-thumb-placeholder">${item.emoji || '🍽️'}</div>`}
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-macros">${item.protein||0}g חלבון · ${item.carbs||0}g פחמ' · ${item.fat||0}g שומן</div>
+          </div>
+          <div class="item-cal">${item.calories||0}</div>
+          <button class="item-del" onclick="deleteItem('${type}',${idx})">✕</button>
+        `;
+        container.appendChild(el);
+      });
+    }
+  });
+
+  document.getElementById('sumCal').textContent  = Math.round(totalCal);
+  document.getElementById('sumProt').textContent = Math.round(totalProt);
+  document.getElementById('sumCarb').textContent = Math.round(totalCarb);
+  document.getElementById('sumFat').textContent  = Math.round(totalFat);
+}
+
+function deleteItem(type, idx) {
+  const day = getDayData(currentDate);
+  day[type].splice(idx, 1);
+  saveDiary();
+  renderAll();
+}
+
+// ====== DATE NAV ======
+function changeDate(dir) {
+  const today = getTodayStr();
+  const next = addDays(currentDate, dir);
+  // Can't go to future
+  if (next > today) return;
+  currentDate = next;
+  renderAll();
+}
+
+// ====== MODAL ======
+const mealTitles = { breakfast:'🌅 ארוחת בוקר', lunch:'🌿 ארוחת צהריים', dinner:'🌙 ארוחת ערב', extra:'🍪 תוספות ונשנושים' };
+
+function openAddModal(type) {
+  currentMealType = type;
+  pendingItem = null;
+  currentImageBase64 = null;
+
+  document.getElementById('modalTitle').textContent = 'הוסף ל' + mealTitles[type];
+  document.getElementById('addOverlay').classList.add('active');
+  loadApiKey();
+
+  // Reset modal state
+  document.getElementById('modalUploadZone').style.display = 'block';
+  document.getElementById('modalCamBtn').style.display     = 'flex';
+  document.getElementById('modalPreview').style.display    = 'none';
+  document.getElementById('modalAnalyzeBtn').style.display = 'none';
+  document.getElementById('modalLoader').style.display     = 'none';
+  document.getElementById('modalResultPreview').style.display = 'none';
+  document.getElementById('modalAddConfirm').classList.remove('visible');
+  document.getElementById('modalError').style.display = 'none';
+  document.getElementById('modalFileInput').value = '';
+  document.getElementById('modalCamInput').value = '';
+}
+
+function closeAddModal(e) {
+  if (e.target === document.getElementById('addOverlay')) closeAddModalDirect();
+}
+function closeAddModalDirect() {
+  document.getElementById('addOverlay').classList.remove('active');
+}
+
+function handleModalFile(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  currentImageMimeType = file.type || 'image/jpeg';
+  const reader = new FileReader();
+  reader.onload = e => {
+    const full = e.target.result;
+    currentImageBase64 = full.split(',')[1];
+
+    document.getElementById('modalPreviewImg').src = full;
+    document.getElementById('modalPreview').style.display = 'block';
+    document.getElementById('modalUploadZone').style.display = 'none';
+    document.getElementById('modalCamBtn').style.display     = 'none';
+    document.getElementById('modalAnalyzeBtn').style.display = 'flex';
+    document.getElementById('modalResultPreview').style.display = 'none';
+    document.getElementById('modalAddConfirm').classList.remove('visible');
+    document.getElementById('modalError').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearModalImage() {
+  currentImageBase64 = null;
+  pendingItem = null;
+  document.getElementById('modalPreview').style.display    = 'none';
+  document.getElementById('modalUploadZone').style.display = 'block';
+  document.getElementById('modalCamBtn').style.display     = 'flex';
+  document.getElementById('modalAnalyzeBtn').style.display = 'none';
+  document.getElementById('modalResultPreview').style.display = 'none';
+  document.getElementById('modalAddConfirm').classList.remove('visible');
+  document.getElementById('modalFileInput').value = '';
+  document.getElementById('modalCamInput').value = '';
+}
+
+async function analyzeModalImage() {
+  if (!currentImageBase64) return;
+  document.getElementById('modalAnalyzeBtn').style.display    = 'none';
+  document.getElementById('modalLoader').style.display        = 'flex';
+  document.getElementById('modalResultPreview').style.display = 'none';
+  document.getElementById('modalAddConfirm').classList.remove('visible');
+  document.getElementById('modalError').style.display = 'none';
+
+  try {
+    const resp = await fetch('/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'You are a nutrition analyzer. You MUST respond with ONLY a raw JSON object. No markdown, no backticks, no explanation. Just the JSON.',
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: currentImageMimeType || 'image/jpeg', data: currentImageBase64 } },
+            { type: 'text', text: 'Analyze this food. Return ONLY this JSON (no markdown, no backticks): {"dish":"name in Hebrew","emoji":"food emoji","portion":"estimated portion size","calories":300,"protein":20,"carbs":30,"fat":10} - all numbers must be integers.' }
+          ]
+        }]
+      })
+    });
+
+    if (!resp.ok) {
+      const errData = await resp.json().catch(() => ({}));
+      throw new Error('שגיאת API ' + resp.status + ': ' + (errData?.error?.message || 'נסה שוב'));
+    }
+
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message || 'שגיאה מה-API');
+
+    let rawText = (data.content?.find(b => b.type === 'text')?.text || '');
+    if (!rawText) throw new Error('תשובה ריקה. נסה שוב.');
+
+    // Extract JSON - greedy match from first { to last }
+    const firstBrace = rawText.indexOf('{');
+    const lastBrace  = rawText.lastIndexOf('}');
+    if (firstBrace === -1 || lastBrace === -1) throw new Error('פורמט לא תקין. נסה שוב.');
+
+    let parsed;
+    try { parsed = JSON.parse(rawText.slice(firstBrace, lastBrace + 1)); }
+    catch(e) { throw new Error('שגיאת פרסור JSON. נסה שוב.'); }
+
+    if (parsed.error) throw new Error(parsed.error);
+
+    document.getElementById('modalLoader').style.display = 'none';
+
+    // Store pending item (with thumbnail)
+    pendingItem = {
+      name: parsed.dish || 'מנה',
+      emoji: parsed.emoji || '🍽️',
+      calories: parsed.calories || 0,
+      protein: parsed.protein || 0,
+      carbs: parsed.carbs || 0,
+      fat: parsed.fat || 0,
+      portion: parsed.portion || '',
+      thumbnail: document.getElementById('modalPreviewImg').src,
+      addedAt: new Date().toISOString()
+    };
+
+    document.getElementById('modalResEmoji').textContent   = parsed.emoji || '🍽️';
+    document.getElementById('modalResName').textContent    = parsed.dish || 'מנה';
+    document.getElementById('modalResPortion').textContent = parsed.portion || '';
+    document.getElementById('modalResCal').textContent     = parsed.calories || 0;
+    document.getElementById('modalResProt').textContent    = parsed.protein || 0;
+    document.getElementById('modalResCarb').textContent    = parsed.carbs || 0;
+    document.getElementById('modalResFat').textContent     = parsed.fat || 0;
+
+    document.getElementById('modalResultPreview').style.display = 'block';
+    document.getElementById('modalAddConfirm').classList.add('visible');
+
+  } catch (err) {
+    document.getElementById('modalLoader').style.display    = 'none';
+    document.getElementById('modalAnalyzeBtn').style.display = 'flex';
+    document.getElementById('modalError').style.display = 'block';
+    document.getElementById('modalError').textContent = '⚠️ ' + (err.message || 'שגיאה. נסה שוב.');
+  }
+}
+
+function confirmAddItem() {
+  if (!pendingItem || !currentMealType) return;
+  const day = getDayData(currentDate);
+  day[currentMealType].push(pendingItem);
+  saveDiary();
+  renderAll();
+  closeAddModalDirect();
+}
+
+// ====== JOURNAL ======
+function openJournal() {
+  renderJournal();
+  document.getElementById('journalOverlay').classList.add('active');
+}
+
+function closeJournal() {
+  document.getElementById('journalOverlay').classList.remove('active');
+}
+
+function closeJournalModal(e) {
+  if (e.target === document.getElementById('journalOverlay')) closeJournal();
+}
+
+function renderJournal() {
+  const list = document.getElementById('journalList');
+  const keys = Object.keys(diary).sort((a,b) => b.localeCompare(a));
+
+  if (keys.length === 0) {
+    list.innerHTML = `<div class="journal-empty"><div class="big-emoji">📔</div>עדיין לא נשמרו ארוחות ביומן.<br>התחל לצלם וסמן ארוחות!</div>`;
+    return;
+  }
+
+  list.innerHTML = keys.map(dateStr => {
+    const day = diary[dateStr];
+    const d = dateStrToDisplay(dateStr);
+    let totalCal = 0;
+    const chips = [];
+
+    mealTypes.forEach(type => {
+      const items = day[type] || [];
+      if (items.length > 0) {
+        const cal = items.reduce((s,i) => s + (i.calories||0), 0);
+        totalCal += cal;
+        const labels = { breakfast:'🌅 בוקר', lunch:'🌿 צהריים', dinner:'🌙 ערב', extra:'🍪 נשנושים' };
+        chips.push(`<div class="journal-meal-chip ${type}">${labels[type]} · ${cal} kcal</div>`);
+      }
+    });
+
+    if (chips.length === 0) return '';
+
+    return `
+      <div class="journal-day-card" onclick="goToDate('${dateStr}')">
+        <div class="journal-day-header">
+          <div>
+            <div class="journal-day-date">${d.label}</div>
+            <div class="journal-day-sub">${d.sub}</div>
+          </div>
+          <div class="journal-day-cal">${totalCal} <span>kcal</span></div>
+        </div>
+        <div class="journal-day-meals">${chips.join('')}</div>
+      </div>
+    `;
+  }).filter(Boolean).join('');
+}
+
+function goToDate(dateStr) {
+  currentDate = dateStr;
+  renderAll();
+  closeJournal();
+}
+
+// ====== INIT ======
+renderAll();
+</script>
+</body>
+</html>
